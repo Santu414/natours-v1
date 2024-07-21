@@ -19,15 +19,14 @@ app.post("/",(req,res)=>{
 })
 
 //GET all tours
-app.get("/api/v1/tours/",(req,res)=>{
-res.json({
-
-    "status":"Succes",
-    "message":"List of all tours",
-    "count":tours.length,
-    "data":tours
-})
-})
+app.get("/api/v1/tours/", (req, res) => {
+  res.json({
+    status: "Succes",
+    message: "List of all tours",
+    count: tours.length,
+    data: tours,
+  });
+});
 
 // Get single tour based on ID
 app.get("/api/v1/tours/:id", (req, res) => {
@@ -89,6 +88,21 @@ app.put("/api/v1/tours/", (req, res) => {
     });
   }
 });
+
+// Delete Tour
+app.delete("/api/v1/tours/:id",(req,res)=>{
+    const id = Number(req.params.id)
+    const newTour = tours.filter(item=>item.id!==id)
+    fs.writeFileSync(
+      `${__dirname}/dev-data/data/tours-simple.json`,
+      JSON.stringify(newTour, null, 2),
+      "utf-8"
+    );
+    res.json({
+      status: "Success",
+      message: "The tour has been Deleted successfully",
+    });
+})
 
 const port = 3000;
 app.listen(port,()=>{
