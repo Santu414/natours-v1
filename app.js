@@ -65,18 +65,16 @@ app.post("/api/v1/tours/", (req, res) => {
 });
 
 // Update Exesting tours
-
 app.put("/api/v1/tours/", (req, res) => {
   const reqBody = req.body;
   const isTourExist = tours.filter((item) => item.id == reqBody.id);
-  console.log(isTourExist, "isTourExist");
+
   if (isTourExist.length == 0) {
     res.json({ message: "There is no tour to update" });
   } else {
     const isUpdateTour = tours.filter((item) => item.id !== reqBody.id);
     const tourId = isTourExist[0].id;
     const updateTour = { id: tourId, ...reqBody };
-    
 
     isUpdateTour.push(updateTour);
     fs.writeFileSync(
