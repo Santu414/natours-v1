@@ -5,6 +5,10 @@ const fs = require("fs")
 //Read data from json file
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`))
 
+// Middleware for parsing JSON and URL-encoded request bodies
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 //Initial server request
 app.get("/",(req,res)=>{
     res.status(200).json({Message:"Hello from server side 123456789 "})
@@ -35,6 +39,29 @@ app.get("/api/v1/tours/:id", (req, res) => {
     count: results.length,
     data: results,
   });
+});
+
+// Create new tour
+app.post("/api/v1/tours/", (req, res) => {
+  let reqBody = req.body;
+  const isTourExist = tours.filter((item) => item.id == reqBody.id);
+  if (isTourExist.length > 0) {
+    return res.status(400).json({ message: "The Tour already exists" });
+  } else {
+    const newId = tours.length;
+    const newTour = { id: newId, ...reqBody };
+    tours.push(newTour);
+    fs.writeFileSync(
+      `${__dirname}/dev-data/data/tours-simple.json`,
+      JSON.stringify(tours, null, 2),
+      "utf-8"
+    );
+    res.json({
+      status: "Success",
+      message: "The tour has been created successfully",
+      data:newTour
+    });
+  }
 });
 
 const port = 3000;
