@@ -26,6 +26,16 @@ res.json({
 })
 
 // Get single tour based on ID
+app.get("/api/v1/tours/:id", (req, res) => {
+  const ID = Number(req.params.id);
+  const results = tours.filter((item) => item.id == ID);
+  res.json({
+    status: "Succes",
+    message: "Single tours",
+    count: results.length,
+    data: results,
+  });
+});
 
 const port = 3000;
 app.listen(port,()=>{
