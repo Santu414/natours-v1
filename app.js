@@ -20,6 +20,12 @@ app.post("/",(req,res)=>{
 
 //GET all tours
 app.get("/api/v1/tours/", (req, res) => {
+    if(tours.length === 0){
+        res.status(404).json({
+            "status":"Not Found",
+            "Message":`There is no data found for given ${id}`
+        })
+  }
   res.json({
     status: "Succes",
     message: "List of all tours",
@@ -30,8 +36,14 @@ app.get("/api/v1/tours/", (req, res) => {
 
 // Get single tour based on ID
 app.get("/api/v1/tours/:id", (req, res) => {
-  const ID = Number(req.params.id);
-  const results = tours.filter((item) => item.id == ID);
+  const id = Number(req.params.id);
+  const results = tours.filter((item) => item.id == id);
+  if(results.length === 0){
+    res.status(404).json({
+        "status":"Not Found",
+        "Message":`There is no data found for given ${id}`
+    })
+  }
   res.json({
     status: "Succes",
     message: "Single tours",
@@ -92,7 +104,7 @@ app.put("/api/v1/tours/", (req, res) => {
 // Delete Tour
 app.delete("/api/v1/tours/:id",(req,res)=>{
     const id = Number(req.params.id)
-    const newTour = tours.filter(item=>item.id!==id)
+    const newTour = tours.filter(item=>item.id!==id);
     fs.writeFileSync(
       `${__dirname}/dev-data/data/tours-simple.json`,
       JSON.stringify(newTour, null, 2),
