@@ -1,12 +1,15 @@
 const express = require("express");
 const morgan = require("morgan");
 const dotenv = require("dotenv");
+const connectDB = require("./config/db")
 
 //Loading env variables
-dotenv.config({path:"./config.env"});
+dotenv.config({path:"./config/config.env"});
 
 const app = express();
 
+//connect to DB
+connectDB();
 //Load Routes
 const tourRoutes = require("./routes/tourRoute");
 const userRoutes = require("./routes/userRoute");
