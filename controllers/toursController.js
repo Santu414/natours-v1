@@ -1,4 +1,4 @@
-const fs = require("fs");
+
 const Tours = require("../models/ToursModel")
 //Read data from json file
 
