@@ -1,10 +1,21 @@
 
 const Tours = require("../models/ToursModel")
 //Read data from json file
-
 //GET all tours  
 const getAllTours = async (req, res) => {
-  const tours = await Tours.find()
+  const queryObj = { ...req.query };
+  const excludedFileds = ["page", "limit", "sort", "fields"];
+  excludedFileds.forEach((item) => delete queryObj[item]);
+  let { page, limit } = req.body;
+  page = Number(page) || 1;
+  limit = Number(limit) || 10;
+  const skip = (page - 1) * limit;
+
+    // Log the query and pagination values for debugging
+    console.log('Query:', queryObj);
+    console.log('Page:', page, 'PageSize:', limit, 'Skip:', skip);
+
+  const tours = await Tours.find(queryObj).skip(skip).limit(limit)
   res.json({
     status: "Succes",
     message: "List of all tours",
