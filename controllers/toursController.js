@@ -1,10 +1,42 @@
-
-const Tours = require("../models/ToursModel")
+const Tours = require("../models/ToursModel");
 //Read data from json file
-
-//GET all tours  
+//GET all tours
 const getAllTours = async (req, res) => {
-  const tours = await Tours.find()
+  let query = {};
+  let { page, limit } = req.query;
+  page = Number(page) || 1;
+  limit = Number(limit) || 10;
+  const skip = (page - 1) * limit;
+
+  // 1) Filtering data
+  const queryObj = { ...req.query };
+  console.log("queryObj", queryObj);
+  query = queryObj;
+  const excludedFields = ["page", "limit", "sort", "fields"];
+  excludedFields.forEach((item) => delete query[item]);
+
+  // 2) Constructing query
+  let queryBuilder = Tours.find(query);
+
+  // 3) Applying sorting
+  if (req.query.sort) {
+    const sortBy = req.query.sort.split(",").join(" ");
+    queryBuilder = queryBuilder.sort(sortBy);
+  }
+  // 3) Applying filelds
+  if (req.query.fields) {
+    const fields = req.query.fields.split(",").join(" ");
+    queryBuilder = queryBuilder.select(fields);
+  }
+
+  // 4) Applying pagination
+  queryBuilder = queryBuilder.skip(skip).limit(limit);
+
+  // 5) Executing the query
+  let tours = await queryBuilder;
+
+  console.log("Tours:", tours);
+
   res.json({
     status: "Succes",
     message: "List of all tours",
@@ -25,7 +57,7 @@ const getTour = async (req, res) => {
 
 // Create New Tour
 const createTour = async (req, res) => {
- const tours = await Tours.create(req.body);
+  const tours = await Tours.create(req.body);
   res.json({
     status: "Success",
     message: "The tour has been created successfully",
@@ -33,10 +65,11 @@ const createTour = async (req, res) => {
   });
 };
 
-
 // Update Exesting tours
-const updateTour = async(req, res) => {
-  const updateTour = await Tours.findByIdAndUpdate(req.params.id,req.body,{ new: true })
+const updateTour = async (req, res) => {
+  const updateTour = await Tours.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  });
   res.json({
     status: "Success",
     message: "The tour has been updated successfully",
@@ -44,10 +77,9 @@ const updateTour = async(req, res) => {
   });
 };
 
-
 // Delete Tour
 const deleteTour = async (req, res) => {
-  const deleteTour = await Tours.findByIdAndDelete(req.params.id)
+  const deleteTour = await Tours.findByIdAndDelete(req.params.id);
   res.json({
     status: "Success",
     message: "The tour has been Deleted successfully",
