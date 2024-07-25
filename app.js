@@ -24,7 +24,7 @@ if(process.env.NODE_ENV =="Development"){
 // 3) Mounting routes
 app.use("/api/v1/tours", tourRoutes);
 app.use("/api/v1/users", userRoutes);
-app.use("/api/v1/reviews", revewRoute);
+//app.use("/api/v1/reviews", revewRoute);
 
 // 4) START SERVER
 const port = process.env.PORT || 3000;
