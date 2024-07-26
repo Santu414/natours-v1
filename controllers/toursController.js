@@ -83,6 +83,8 @@ const deleteTour = async (req, res) => {
     message: "The tour has been Deleted successfully",
   });
 };
+
+// Top Retaed Tour
 const getTop5Tours = async (req, res) => {
   let limit = 5;
   let fields = "name price difficulty ratingsAverage duration";
@@ -100,6 +102,30 @@ const getTop5Tours = async (req, res) => {
   });
 };
 
+// Top Tour Stats
+const getTourStats = async (req, res) => {
+  const tourStats = await Tours.aggregate([
+    {
+      $match: { ratingsAverage: { $gte: 4.5 } },
+    },
+    {
+      $group: {
+        _id: null,
+        avgRating: { $avg: "$ratingsAverage" },
+        avgPrice: { $avg: "$price" },
+        minPrice: { $min: "$price" },
+        maxPrice: { $max: "$price" },
+      },
+    },
+  ]);
+  res.json({
+    status: "Success",
+    message: "Tour stats",
+    count: tourStats.length,
+    data: tourStats,
+  });
+};
+
 module.exports = {
   getAllTours,
   getTour,
@@ -107,4 +133,5 @@ module.exports = {
   updateTour,
   deleteTour,
   getTop5Tours,
+  getTourStats,
 };
