@@ -35,8 +35,6 @@ const getAllTours = async (req, res) => {
   // 5) Executing the query
   let tours = await queryBuilder;
 
-  console.log("Tours:", tours);
-
   res.json({
     status: "Succes",
     message: "List of all tours",
@@ -95,7 +93,6 @@ const getTop5Tours = async (req, res) => {
     .limit(limit)
     .select(fields)
     .lean();
-
   res.json({
     status: "Succes",
     message: "List of to 5  tours",
