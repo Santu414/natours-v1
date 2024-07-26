@@ -102,30 +102,29 @@ const getTop5Tours = async (req, res) => {
   });
 };
 
-// Top AvgRating
-  const getTourStats = async (req, res) => {
-    const tourStats = await Tours.aggregate([
-      {
-        $match: { ratingsAverage: { $gte: 4.5 } },
+// Top Tour Stats
+const getTourStats = async (req, res) => {
+  const tourStats = await Tours.aggregate([
+    {
+      $match: { ratingsAverage: { $gte: 4.5 } },
+    },
+    {
+      $group: {
+        _id: null,
+        avgRating: { $avg: "$ratingsAverage" },
+        avgPrice: { $avg: "$price" },
+        minPrice: { $min: "$price" },
+        maxPrice: { $max: "$price" },
       },
-      {
-        $group: {
-          _id: null,
-          avgRating: { $avg: "$ratingsAverage" },
-          avgPrice: { $avg: "$price" },
-          minPrice: { $min: "$price" },
-          maxPrice: { $max: "$price" },
-        },
-      },
-    ]);
-    res.json({
-      status: "Success",
-      message: "Tour stats",
-      count: tourStats.length,
-      data: tourStats,
-    });
-  };
-
+    },
+  ]);
+  res.json({
+    status: "Success",
+    message: "Tour stats",
+    count: tourStats.length,
+    data: tourStats,
+  });
+};
 
 module.exports = {
   getAllTours,
