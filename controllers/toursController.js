@@ -35,8 +35,6 @@ const getAllTours = async (req, res) => {
   // 5) Executing the query
   let tours = await queryBuilder;
 
-  console.log("Tours:", tours);
-
   res.json({
     status: "Succes",
     message: "List of all tours",
@@ -85,5 +83,28 @@ const deleteTour = async (req, res) => {
     message: "The tour has been Deleted successfully",
   });
 };
+const getTop5Tours = async (req, res) => {
+  let limit = 5;
+  let fields = "name price difficulty ratingsAverage duration";
+  let sort = "-price average";
 
-module.exports = { getAllTours, getTour, createTour, updateTour, deleteTour };
+  const getTop5tour = await Tours.find()
+    .sort(sort)
+    .limit(limit)
+    .select(fields)
+    .lean();
+  res.json({
+    status: "Succes",
+    message: "List of to 5  tours",
+    data: getTop5tour,
+  });
+};
+
+module.exports = {
+  getAllTours,
+  getTour,
+  createTour,
+  updateTour,
+  deleteTour,
+  getTop5Tours,
+};
