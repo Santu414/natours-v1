@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema({
 // Pre-save hook to hash the password
 userSchema.pre('save', async function(next) {
   // Only hash the password if it has been modified (or is new)
-  if (!this.isModified('password')) return next();
+  if (!this.isModified('password')) return next(); 
   try {
       // Generate a salt
       const salt = await bcrypt.genSalt(10);
