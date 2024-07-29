@@ -1,39 +1,48 @@
 const Tours = require("../models/ToursModel");
+const APIFeatures=require("./../utils//apiFeaturs")
 //Read data from json file
+
+
+
 //GET all tours
 const getAllTours = async (req, res) => {
-  let query = {};
-  let { page, limit } = req.query;
-  page = Number(page) || 1;
-  limit = Number(limit) || 10;
-  const skip = (page - 1) * limit;
+    //let { page, limit } = req.query;
+  //page = Number(page) || 1;
+  //limit = Number(limit) || 10;
+  //const skip = (page - 1) * limit; 
 
   // 1) Filtering data
-  const queryObj = { ...req.query };
-  console.log("queryObj", queryObj);
-  query = queryObj;
-  const excludedFields = ["page", "limit", "sort", "fields"];
-  excludedFields.forEach((item) => delete query[item]);
+  // const queryObj = { ...req.query };
+  //console.log("queryObj", queryObj);
+  //query = queryObj;
+  //const excludedFields = ["page", "limit", "sort", "fields"];
+  //excludedFields.forEach((item) => delete query[item]);
 
   // 2) Constructing query
-  let queryBuilder = Tours.find(query);
+ // let queryBuilder = Tours.find(query);
 
   // 3) Applying sorting
-  if (req.query.sort) {
-    const sortBy = req.query.sort.split(",").join(" ");
-    queryBuilder = queryBuilder.sort(sortBy);
-  }
+  // if (req.query.sort) {
+  // const sortBy = req.query.sort.split(",").join(" ");
+  //queryBuilder = queryBuilder.sort(sortBy);
+  // }
   // 3) Applying filelds
-  if (req.query.fields) {
-    const fields = req.query.fields.split(",").join(" ");
-    queryBuilder = queryBuilder.select(fields);
-  }
+  //if (req.query.fields) {
+  // const fields = req.query.fields.split(",").join(" ");
+  // queryBuilder = queryBuilder.select(fields);
+  // }
 
   // 4) Applying pagination
-  queryBuilder = queryBuilder.skip(skip).limit(limit);
+ // queryBuilder = queryBuilder.skip(skip).limit(limit);
 
   // 5) Executing the query
-  let tours = await queryBuilder;
+ const features = new APIFeatures(Tours.find(), req.query)
+   .filter()
+   .sort()
+   .limitFields()
+   .paginate();
+
+  let tours = await features.query;
 
   res.json({
     status: "Succes",
@@ -104,27 +113,40 @@ const getTop5Tours = async (req, res) => {
 
 // Top Tour Stats
 const getTourStats = async (req, res) => {
-  const tourStats = await Tours.aggregate([
-    {
-      $match: { ratingsAverage: { $gte: 4.5 } },
-    },
-    {
-      $group: {
-        _id: null,
-        avgRating: { $avg: "$ratingsAverage" },
-        avgPrice: { $avg: "$price" },
-        minPrice: { $min: "$price" },
-        maxPrice: { $max: "$price" },
+  try {
+    const tourStats = await Tours.aggregate([
+      {
+        $match: { ratingsAverage: { $gte: 4.5 } },
       },
-    },
-  ]);
-  res.json({
-    status: "Success",
-    message: "Tour stats",
-    count: tourStats.length,
-    data: tourStats,
-  });
+      {
+        $group: {
+          _id: { $toUpper: "$difficulty" },
+          numTours: { $sum: 1 },
+          numRatings: { $sum: "$ratingsQuantity" },
+          avgRating: { $avg: "$ratingsAverage" },
+          avgPrice: { $avg: "$price" },
+          minPrice: { $min: "$price" },
+          maxPrice: { $max: "$price" },
+        },
+      },
+      {
+        $sort: { avgPrice: 1 },
+      },
+     // {
+     //   $match: { _id: { $ne: "EASY" } },
+     // },
+    ]);
+    res.json({
+      status: "Success",
+      message: "Tour stats",
+      count: tourStats.length,
+      data: tourStats,
+    });
+  } catch (error) {
+    throw new Error(error);
+  }
 };
+
 
 const getMonthlyPlan = async (req, res) => {
   try {
