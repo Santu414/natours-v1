@@ -8,13 +8,16 @@ const {
   deleteTour,
   getTop5Tours,
   getTourStats,
+  getMonthlyPlan,
 } = require("../controllers/toursController");
 router.get("/", getAllTours);
 router.get("/top-5-tours", getTop5Tours);
 router.get("/tour-stats", getTourStats);
+router.get("/monthly-plan/:year", getMonthlyPlan);
 router.get("/:id", getTour);
 router.post("/", createTour);
 router.put("/:id", updateTour);
 router.delete("/:id", deleteTour);
 
 module.exports = router;
+ 
