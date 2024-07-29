@@ -147,7 +147,7 @@ const getTourStats = async (req, res) => {
   }
 };
 
-
+//Tour Monthly Planing
 const getMonthlyPlan = async (req, res) => {
   try {
     const year = req.params.year * 1;
