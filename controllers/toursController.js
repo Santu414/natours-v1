@@ -76,7 +76,9 @@ const createTour = async (req, res) => {
 const updateTour = async (req, res) => {
   const updateTour = await Tours.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
+    runValidators: false,
   });
+
   res.json({
     status: "Success",
     message: "The tour has been updated successfully",
