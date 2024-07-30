@@ -77,6 +77,12 @@ tourSchema.pre("save", function (next) {
  // next();/
 //});
 
+//AGGREGATIOn Middlewere
+tourSchema.pre("aggregate", function (next) {
+  this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
+  console.log(this.pipeline());
+  next();
+});
 
 //Query Middleware
 //tourSchema.pre("find", function (next) {
