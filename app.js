@@ -1,10 +1,10 @@
 const express = require("express");
 const morgan = require("morgan");
 const dotenv = require("dotenv");
-const connectDB = require("./config/db")
+const connectDB = require("./config/db");
 
 //Loading env variables
-dotenv.config({path:"./config/config.env"});
+dotenv.config({ path: "./config/config.env" });
 
 const app = express();
 
@@ -17,7 +17,7 @@ const revewRoute = require("./routes/revewRoute");
 // Middleware for parsing JSON and URL-encoded request bodies
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-if(process.env.NODE_ENV =="Development"){
+if (process.env.NODE_ENV == "Development") {
   app.use(morgan("dev"));
 }
 
@@ -25,6 +25,13 @@ if(process.env.NODE_ENV =="Development"){
 app.use("/api/v1/tours", tourRoutes);
 app.use("/api/v1/users", userRoutes);
 //app.use("/api/v1/reviews", revewRoute);
+
+app.all("*", (req, res, next) => {
+  res.status(404).json({
+    status: "fail",
+    message: `Can't find ${req.originalUrl} on this server!`,
+  });
+});
 
 // 4) START SERVER
 const port = process.env.PORT || 3000;
