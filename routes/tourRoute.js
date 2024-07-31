@@ -10,6 +10,7 @@ const {
   getTourStats,
   getMonthlyPlan,
 } = require("../controllers/toursController");
+
 router.get("/", getAllTours);
 router.get("/top-5-tours", getTop5Tours);
 router.get("/tour-stats", getTourStats);

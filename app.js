@@ -31,7 +31,7 @@ app.use("/api/v1/users", userRoutes);
 //app.use("/api/v1/reviews", revewRoute);
 
 app.all("*", (req, res, next) => {
-  next(new AppError(`Can't find ${req.originalUrl}on this server!`));
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`));
 });
 
 app.use(globalErrorHandler);
