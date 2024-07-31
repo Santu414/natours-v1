@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "debug":"ndb server.js"
+    "debug":"ndb app.js"
   },
   "keywords": [],
   "author": "",
