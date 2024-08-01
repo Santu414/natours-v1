@@ -72,7 +72,9 @@ const getTour = catchAsync(async (req, res,next) => {
 
 // Create New Tour
 const createTour = catchAsync(async (req, res, next) => {
+  
   const tours = await Tours.create(req.body);
+  console.log("tourstours", tours);
   res.json({
     status: "Success",
     message: "The tour has been created successfully",
