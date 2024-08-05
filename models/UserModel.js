@@ -24,6 +24,13 @@ const userSchema = new mongoose.Schema({
   passwordConfirm: {
     type: String,
     required: [true, "COnfirm Password is required"],
+    validate: {
+      // This only works on CREATE and SAVE
+      validator:function(el){
+        return el===this.password
+      },
+      message: 'Password are not the same'
+    }
   },
 });
 
@@ -35,7 +42,7 @@ userSchema.pre('save', async function(next) {
       // Generate a salt
       const salt = await bcrypt.genSalt(10);
       // Hash the password using the salt
-      this.password = await bcrypt.hash(this.password, salt);
+      this.password = await bcrypt.hash(this.password, 12);
 
       // Delete confirm password
       this.passwordConfirm = undefined
@@ -44,6 +51,7 @@ userSchema.pre('save', async function(next) {
       next(error);
   } 
 });
+
 
 const User = mongoose.model("User", userSchema);
 
