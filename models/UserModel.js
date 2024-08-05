@@ -19,6 +19,7 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, "Password is required"],
+    minlength:8
   },
   passwordConfirm: {
     type: String,
@@ -41,7 +42,7 @@ userSchema.pre('save', async function(next) {
       next();
   } catch (error) {
       next(error);
-  }
+  } 
 });
 
 const User = mongoose.model("User", userSchema);
