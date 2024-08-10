@@ -25,6 +25,12 @@ if (process.env.NODE_ENV == "Development") {
   app.use(morgan("dev"));
 }
 
+app.use((req,res,next)=>{
+  req.requestTime= new Date().toISOString()
+  console.log(req.headers)
+  next()
+})
+
 // 3) Mounting routes
 app.use("/api/v1/tours", tourRoutes);
 app.use("/api/v1/users", userRoutes);

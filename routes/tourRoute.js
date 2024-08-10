@@ -1,4 +1,5 @@
 const express = require("express");
+const authController=require("./../controllers/authController")
 const router = express.Router();
 const {
   getAllTours,
@@ -11,7 +12,7 @@ const {
   getMonthlyPlan,
 } = require("../controllers/toursController");
 
-router.get("/", getAllTours);
+router.get("/", authController.protect, getAllTours);
 router.get("/top-5-tours", getTop5Tours);
 router.get("/tour-stats", getTourStats);
 router.get("/monthly-plan/:year", getMonthlyPlan);
