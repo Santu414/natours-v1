@@ -2,6 +2,7 @@ const Tours = require("../models/ToursModel");
 const APIFeatures = require("./../utils//apiFeaturs");
 const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError");
+const User = require("../models/UserModel");
 
 
 //Read data from json file

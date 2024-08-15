@@ -6,14 +6,27 @@ const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError");
 const sendEmail = require("./../utils/email");
 
+// Signing the JWT
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 };
 
+// Creating and sending the JWT in the response
 const createSendToken = (user, statusCode, res) => {
   const token = signToken(user._id);
+  // Function to verify a JWT
+const verifyToken = (token) => {
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log("Token is valid:", decoded);
+  } catch (err) {
+    console.error("JWT Verification Error:", err.message);
+  }
+};
+const validToken = verifyToken(token);
+  console.log("tokentoken",token)
   res.status(statusCode).json({
     status: "success",
     token,
@@ -49,7 +62,7 @@ exports.login = catchAsync(async (req, res, next) => {
 
 exports.protect = catchAsync(async (req, res, next) => {
   // 1) Getting token and check of it's there
-  console.log("reqreq", req);
+  console.log("reqreq", req.headers.authorization);
   let token;
   if (
     req.headers.authorization &&
@@ -69,7 +82,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   // 3) Check if user still exists
 
-  const currentUser = await User.findById(decoded._id);
+  const currentUser = await User.findById(decoded.id);
   if (!currentUser) {
     return next(
       new AppError(
@@ -183,10 +196,10 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
+  console.log("body",req.body)
   // 1) Get user from collection
-  console.log("usersss", req.user);
+  console.log("users123456", req.user);
   const user = await User.findById(req.user.id).select("+password");
-  console.log("useruseruser", user);
 
   // 2) Check if POSTed current password is correct
   if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
@@ -200,5 +213,5 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 
   // User.findByIdAndUpdate will NOT work as intended!
   // 4) Log user in, send JWT
-  createSendToken(user, 200, req, res);
+  createSendToken(user, 200, res);
 });
