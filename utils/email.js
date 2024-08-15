@@ -1,7 +1,8 @@
 const nodemailer = require("nodemailer");
 
 const sendEmail = async (options) => {
-  // 1) Create a transporter
+  console.log("optionsoptions", options);
+  // 1) Create a transports
   const transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
     port: process.env.EMAIL_PORT,
@@ -11,6 +12,7 @@ const sendEmail = async (options) => {
     },
     // Activate in Gmail "less secure app" option if using Gmail
   });
+  console.log("transportstransports", transports);
 
   // 2) Define email options
   const mailOptions = { 
