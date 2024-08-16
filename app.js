@@ -5,6 +5,8 @@ const connectDB = require("./config/db");
 const globalErrorHandler = require("./controllers/errorController");
 const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
+const mongoSanitize=require("express-mongo-sanitize")
+const XSS = require("xss-clean");
  
 const AppError = require("./utils/appError");
 //Loading env variables
@@ -18,6 +20,7 @@ connectDB();
 const tourRoutes = require("./routes/tourRoute");
 const userRoutes = require("./routes/userRoute");
 const revewRoute = require("./routes/revewRoute");
+const { mongo } = require("mongoose");
 // Middleware for parsing JSON and URL-encoded request bodies
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -26,6 +29,12 @@ if (process.env.NODE_ENV == "Development") {
 }
 
 app.use(helmet());
+
+// Data sanitization against senitize
+app.use(mongoSanitize());
+
+// Data sanitization against XSS
+app.use(XSS());
 
 const limiter = rateLimit({
   max: 100,
