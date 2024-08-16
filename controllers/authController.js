@@ -16,17 +16,31 @@ const signToken = (id) => {
 // Creating and sending the JWT in the response
 const createSendToken = (user, statusCode, res) => {
   const token = signToken(user._id);
+
+  const cookieOptions = {
+    expires: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+    ),
+    
+    httpOnly: true,
+  };
+  if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
+
+  res.cookie("jwt", token, cookieOptions);
+
+  // Remove Password from output
+  user.password=undefined
+  
   // Function to verify a JWT
-const verifyToken = (token) => {
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("Token is valid:", decoded);
-  } catch (err) {
-    console.error("JWT Verification Error:", err.message);
-  }
-};
-const validToken = verifyToken(token);
-  console.log("tokentoken",token)
+  // const verifyToken = (token) => {
+  //  try {
+  //  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  //console.log("Token is valid:", decoded);
+  //} catch (err) {
+  // console.error("JWT Verification Error:", err.message);
+  // }
+  //};
+  //const validToken = verifyToken(token);
   res.status(statusCode).json({
     status: "success",
     token,
@@ -196,7 +210,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
-  console.log("body",req.body)
+  console.log("body", req.body);
   // 1) Get user from collection
   console.log("users123456", req.user);
   const user = await User.findById(req.user.id).select("+password");
