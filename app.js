@@ -4,7 +4,8 @@ const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const globalErrorHandler = require("./controllers/errorController");
 const rateLimit = require("express-rate-limit");
-
+const helmet = require("helmet");
+ 
 const AppError = require("./utils/appError");
 //Loading env variables
 dotenv.config({ path: "./config/config.env" });
@@ -24,6 +25,8 @@ if (process.env.NODE_ENV == "Development") {
   app.use(morgan("dev"));
 }
 
+app.use(helmet());
+
 const limiter = rateLimit({
   max: 100,
   windowMs: 60 * 60 * 1000,
@@ -31,6 +34,10 @@ const limiter = rateLimit({
 });
 
 app.use("/api", limiter); 
+
+app.use(express.json({limit:'10kb'}))
+
+
 
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
