@@ -2,11 +2,10 @@ const express = require("express");
 const morgan = require("morgan");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
-const globalErrorHandler=require("./controllers/errorController")
+const globalErrorHandler = require("./controllers/errorController");
+const rateLimit = require("express-rate-limit");
 
-
-
-const AppError=require("./utils/appError")
+const AppError = require("./utils/appError");
 //Loading env variables
 dotenv.config({ path: "./config/config.env" });
 
@@ -25,11 +24,19 @@ if (process.env.NODE_ENV == "Development") {
   app.use(morgan("dev"));
 }
 
-app.use((req,res,next)=>{
-  req.requestTime= new Date().toISOString()
-  console.log(req.headers)
-  next()
-})
+const limiter = rateLimit({
+  max: 100,
+  windowMs: 60 * 60 * 1000,
+  message: "Too many requists from this IP, Please try again in an hour!",
+});
+
+app.use("/api", limiter); 
+
+app.use((req, res, next) => {
+  req.requestTime = new Date().toISOString();
+  console.log(req.headers);
+  next();
+});
 
 // 3) Mounting routes
 app.use("/api/v1/tours", tourRoutes);
