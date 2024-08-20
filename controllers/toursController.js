@@ -58,7 +58,7 @@ const getAllTours = catchAsync(async (req, res, next) => {
 
 // Get single tour based on ID
 const getTour = catchAsync(async (req, res,next) => {
-  const tour = await Tours.findById(req.params.id);
+  const tour = await Tours.findById(req.params.id)
 
   if(!tour){
     return next(new AppError('No tour found with that ID',404))
