@@ -20,8 +20,7 @@ connectDB();
 //Load Routes
 const tourRoutes = require("./routes/tourRoute");
 const userRoutes = require("./routes/userRoute");
-const revewRoute = require("./routes/revewRoute");
-const { mongo } = require("mongoose");
+const reviewRoute = require("./routes/reviewRoute");
 // Middleware for parsing JSON and URL-encoded request bodies
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -72,7 +71,7 @@ app.use((req, res, next) => {
 // 3) Mounting routes
 app.use("/api/v1/tours", tourRoutes);
 app.use("/api/v1/users", userRoutes);
-//app.use("/api/v1/reviews", revewRoute);
+app.use("/api/v1/reviews", reviewRoute);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`));
