@@ -1,44 +1,28 @@
-const Review = require("../models/reviewModel");
+const Review = require("./../models/reviewModel");
+const catchAsync = require("./../utils/catchAsync");
 
 // Get All Users
-const getAllReviews = async (req, res) => {
-  res.json({
+const getAllReviews = catchAsync(async (req, res) => {
+    const reviews = await Review.find();
+
+  res.status(200).json({
     status: "Succes",
-    message: "List of all review",
+    results: reviews,
+    data: {
+      reviews,
+    },
   });
-};
+});
 
-//Get Single User
-const getReview = async (req, res) => {
-  res.json({
+const createReviews = catchAsync(async (req, res, next) => {
+  const newReview = await Review.create(req.body);
+
+  res.status(200).json({
     status: "Succes",
-    message: "Single review",
+    data: {
+      review: newReview,
+    },
   });
-};
+});
 
-//Create new Users
-const createReview = async (req, res) => {
-  res.json({
-    status: "Succes",
-    message: "The review has been created successfully",
-  });
-};
-
-//Updata User Profile
-const updatReview =async(req, res) => {
-  res.json({
-    status: "Success",
-    message: "The review has been updated successfully",
-  });
-};
-
-// Delete user
-const deleteReview = async(req, res) => {
-  
-  res.json({
-    status: "Success",
-    message: "The review has been Deleted successfully",
-  });
-};
-
-module.exports = { getAllReviews, getReview, createReview, updatReview, deleteReview };
+module.exports = { getAllReviews, createReviews };
