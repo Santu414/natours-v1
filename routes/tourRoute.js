@@ -1,7 +1,9 @@
 const express = require("express");
-const { protect, restrictTo } = require("./../controllers/authController")
-const reviewController = require("./../controllers/reviewController");
 const authController=require("./../controllers/authController")
+const reviewRoute = require( "./../routes/reviewRoute")
+
+
+
 const router = express.Router();
 const {
   getAllTours,
@@ -13,6 +15,14 @@ const {
   getTourStats,
   getMonthlyPlan,
 } = require("../controllers/toursController");
+
+//POST /tour/234fad4/reviews
+//GET /tour/234fad4/reviews
+//GET /tour/234fad4/reviews/94887fda
+
+//router.post('/:tourId/reviews',authController.protect,authController.restrictTo("user"),reviewController.createReviews)
+
+router.use("/:tourId/reviews", reviewRoute);
 
 router.get("/", authController.protect, getAllTours);
 router.get("/top-5-tours", getTop5Tours);
@@ -32,7 +42,7 @@ router.delete(
 //GET /tour/234fad4/reviews
 //GET /tour/234fad4/reviews/94887fda
 
-router.post('/:tourId/reviews',authController.protect,authController.restrictTo("user"),reviewController.createReviews)
+//router.post('/:tourId/reviews',authController.protect,authController.restrictTo("user"),reviewController.createReviews)
 
 module.exports = router;
  
