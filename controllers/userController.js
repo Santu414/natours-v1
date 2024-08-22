@@ -88,16 +88,7 @@ const createUser = catchAsync(async (req, res, next) => {
 });
 
 //Updata User Profile
-const updatUser = catchAsync(async (req, res, next) => {
-  const updataUser = await User.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-  });
-  res.json({
-    status: "Success",
-    message: "The user has been updated successfully",
-    data: updataUser,
-  });
-});
+const updatUser =factory.upDateOne(User)
 
 // Delete user
 const deleteUser = factory.deleteOne(User)

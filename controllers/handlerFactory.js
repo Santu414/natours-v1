@@ -12,3 +12,33 @@ exports.deleteOne = (Model) => catchAsync(async (req, res, next) => {
       data:null,
     });
   });
+
+
+
+exports.upDateOne = (Model) => catchAsync(async (req, res, next) => {
+    const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: false,
+    });
+
+    if (!doc) {
+      return next(new AppError("No Document found with that ID", 404));
+    }
+
+    res.json({
+      status: "Success",
+      message: "The tour has been updated successfully",
+      data: {
+        data: doc,
+      },
+    });
+  });
+
+  exports.createOne =(Model) =>catchAsync(async (req, res, next) => {
+    const dec = await Model.create(req.body);
+         res.json({
+      status: "Success",
+      message: "The tour has been created successfully",
+      data: dec,
+    });
+  });

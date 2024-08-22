@@ -74,34 +74,10 @@ const getTour = catchAsync(async (req, res,next) => {
 });
 
 // Create New Tour
-const createTour = catchAsync(async (req, res, next) => {
-  
-  const tours = await Tours.create(req.body);
-  console.log("tourstours", tours);
-  res.json({
-    status: "Success",
-    message: "The tour has been created successfully",
-    data: tours,
-  });
-});
+const createTour = factory.createOne(Tours)
 
 // Update Exesting tours
-const updateTour = catchAsync(async (req, res,next) => {
-  const updateTour = await Tours.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: false,
-  });
-
-  if (!updateTour) {
-    return next(new AppError("No tour found with that ID", 404));
-  }
-
-  res.json({
-    status: "Success",
-    message: "The tour has been updated successfully",
-    data: updateTour,
-  });
-});
+const updateTour = factory.upDateOne(Tours);
 
 
 const  deleteTour = factory.deleteOne(Tours)

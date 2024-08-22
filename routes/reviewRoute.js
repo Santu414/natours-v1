@@ -9,9 +9,16 @@ const router = express.Router({mergeParams:true});
 //POST /reviews
 
 router.get("/", reviewController.getAllReviews);
-router.post("/", authController.protect,authController.restrictTo('user'),reviewController.createReviews);
+router.post(
+  "/",
+  authController.protect,
+  authController.restrictTo("user"),
+  reviewController.setTourUserIds,
+  reviewController.createReviews
+);
 
 router.delete("/:id", reviewController.deleteReview);
+router.patch("/:id", reviewController.upDateReview);
 
 
 module.exports = router;
