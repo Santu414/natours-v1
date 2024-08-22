@@ -1,5 +1,6 @@
 const Review = require("./../models/reviewModel");
 const catchAsync = require("./../utils/catchAsync");
+const factory = require("./handlerFactory");
 
 // Get All Users
 const getAllReviews = catchAsync(async (req, res) => {
@@ -11,6 +12,7 @@ const getAllReviews = catchAsync(async (req, res) => {
   res.status(200).json({
     status: "Succes",
     results: reviews,
+     count: reviews.length,
     data: {
       reviews,
     },
@@ -32,4 +34,6 @@ const createReviews = catchAsync(async (req, res, next) => {
   });
 });
 
-module.exports = { getAllReviews, createReviews };
+const deleteReview = factory.deleteOne(Review);
+
+module.exports = { getAllReviews, createReviews, deleteReview };

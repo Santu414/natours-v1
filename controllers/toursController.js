@@ -4,6 +4,7 @@ const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError");
 const User = require("../models/UserModel");
 const Review = require("../models/reviewModel");
+const factory = require("./handlerFactory")
 
 
 //Read data from json file
@@ -102,18 +103,21 @@ const updateTour = catchAsync(async (req, res,next) => {
   });
 });
 
-// Delete Tour
-const deleteTour = catchAsync(async (req, res,next) => {
-  const deleteTour = await Tours.findByIdAndDelete(req.params.id);
 
-    if (!deleteTour) { 
-      return next(new AppError("No tour found with that ID", 404));
-    }
-  res.json({
-    status: "Success",
-    message: "The tour has been Deleted successfully",
-  });
-});
+const  deleteTour = factory.deleteOne(Tours)
+
+// Delete Tour
+//const deleteTour = catchAsync(async (req, res,next) => {
+ // const deleteTour = await Tours.findByIdAndDelete(req.params.id);
+
+ //   if (!deleteTour) { 
+   //   return next(new AppError("No tour found with that ID", 404));
+    //}
+  //res.json({
+  //  status: "Success",
+  //  message: "The tour has been Deleted successfully",
+  //});
+//});
 
 // Top Retaed Tour
 const getTop5Tours = catchAsync(async (req, res,next) => {
