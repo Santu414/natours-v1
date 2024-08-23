@@ -48,6 +48,12 @@ const updateMe = catchAsync(async (req, res, next) => {
   });
 });
 
+
+const getMe=(req,res,next)=>{
+ req.params.id=req.user.id
+  next() 
+}
+
 const deleteMe=catchAsync(async(req,res)=>{
     await User.findByIdAndUpdate(req.user.id,{active:false})
 
@@ -82,6 +88,7 @@ const deleteUser = factory.deleteOne(User)
 module.exports = {
   getAllUsers,
   getUser,
+  getMe,
   createUser,
   updatUser,
   deleteUser,
