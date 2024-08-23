@@ -1,5 +1,7 @@
 const catchAsync = require("./../utils/catchAsync")
-const AppError = require("./../utils/appError")
+const AppError = require("./../utils/appError");
+const APIFeatures = require("./../utils//apiFeaturs");
+
 
 exports.deleteOne = (Model) => catchAsync(async (req, res, next) => {
     const doc = await Model.findByIdAndDelete(req.params.id);
@@ -42,3 +44,45 @@ exports.upDateOne = (Model) => catchAsync(async (req, res, next) => {
       data: dec,
     });
   });
+
+  exports.getOne = (Model, popOptions) =>
+    catchAsync(async (req, res, next) => {
+      let query = Model.findById(req.params.id);
+      if (popOptions) query = query.populate(popOptions);
+      const dec = await query;
+
+      if (!dec) {
+        return next(new AppError("No decument found with that ID", 404));
+      }
+
+      res.json({
+        status: "Success",
+        message: `Getting Tour by ${req.params.id}`,
+        data: {
+          data: dec,
+        },
+      });
+    });
+
+    exports.getAll = (Model) =>
+      catchAsync(async (req, res, next) => {
+        let filter = {};
+        if (req.params.tourId) filter = { tour: req.params.tourId };
+
+        const features = new APIFeatures(Model.find(filter), req.query)
+          .filter()
+          .sort()
+          .limitFields()
+          .paginate();
+
+        let doc = await features.query;
+
+        res.status(200).json({
+          status: "Succes",
+          message: "List of all doc",
+          count: doc.length,
+          data: {
+            data: doc,
+          },
+        });
+      });
