@@ -12,17 +12,7 @@ const filterObj = (obj, ...allowedFields) => {
   return newObj;
 };
 
-// Get All Users
-const getAllUsers = catchAsync(async (req, res, next) => {
-  const allUser = await User.find();
-  res.status(200).json({
-    status: "Succes",
-    results: allUser.length,
-    data: {
-      allUser,
-    },
-  });
-});
+
 
 const updateMe = catchAsync(async (req, res, next) => {
   // 1) Create error if user POSTs password data
@@ -67,26 +57,22 @@ const deleteMe=catchAsync(async(req,res)=>{
     });
 })
 
-//Get Single User
-const getUser = catchAsync(async (req, res, next) => {
-  const user = await User.findById(req.params.id);
-  res.json({
-    status: "Succes",
-    message: "Single users",
-    data: user,
-  });
-});
+
 
 //Create new Users
 const createUser = catchAsync(async (req, res, next) => {
   const createUser = await User.create(req.body);
   res.json({
     status: "Succes",
-    message: "The user has been created successfully",
+    message: "This route is not defined! please use signup instead",
     data: createUser,
   });
 });
 
+// Get All Users
+const getAllUsers =factory.getAll(User)
+//Get Single User
+const getUser = factory.getOne(User)
 //Updata User Profile
 const updatUser =factory.upDateOne(User)
 

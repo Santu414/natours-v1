@@ -17,6 +17,7 @@ router.post(
   reviewController.createReviews
 );
 
+router.get("/:id", reviewController.getReviews);
 router.delete("/:id", reviewController.deleteReview);
 router.patch("/:id", reviewController.upDateReview);
 
