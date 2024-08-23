@@ -24,13 +24,28 @@ const {
 
 router.use("/:tourId/reviews", reviewRoute);
 
-router.get("/", authController.protect, getAllTours);
+router.get("/",  getAllTours);
 router.get("/top-5-tours", getTop5Tours);
 router.get("/tour-stats", getTourStats);
-router.get("/monthly-plan/:year", getMonthlyPlan);
+router.get(
+  "/monthly-plan/:year",
+  authController.protect,
+  authController.restrictTo("admin", "lead-guide","guide"),
+  getMonthlyPlan
+);
 router.get("/:id", getTour);
-router.post("/", createTour);
-router.put("/:id", updateTour);
+router.post(
+  "/",
+  authController.protect,
+  authController.restrictTo("admin", "lead-guide"),
+  createTour
+);
+router.patch(
+  "/:id",
+  authController.protect,
+  authController.restrictTo("admin", "lead-guide"),
+  updateTour
+);
 router.delete(
   "/:id",
   authController.protect,

@@ -19,16 +19,21 @@ const {
   updateMe,
   deleteMe,
 } = require("../controllers/userController");
+
+router.use(authController.restrictTo("admin"))
+
 router.get("/", getAllUsers);
 router.get("/:id", getUser);
 router.post("/", createUser);
 router.post("/signup", signup);
 router.post("/login", login);
+router.use(authController.protect);
 router.post("/forgotPassword", forgotPassword);
 router.patch("/resetPassword/:token", resetPassword);
-router.patch("/updateMyPassword", authController.protect, updatePassword);
-router.patch("/updateMe", authController.protect, updateMe);
-router.delete("/deleteMe", authController.protect, deleteMe); 
+
+router.patch("/updateMyPassword",  updatePassword);
+router.patch("/updateMe",  updateMe);
+router.delete("/deleteMe",  deleteMe); 
 router.get("/me", authController.protect, userController.getMe, userController.getUser);
 router.put("/:id", updatUser);
 router.delete("/:id", deleteUser);
