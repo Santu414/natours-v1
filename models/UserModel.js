@@ -51,22 +51,22 @@ const userSchema = new mongoose.Schema({
 });
 
 // Pre-save hook to hash the password
-//userSchema.pre('save', async function(next) {
-  // Only hash the password if it has been modified (or is new)
-  //if (!this.isModified('password')) return next(); 
-  //try {
+userSchema.pre('save', async function(next) {
+ //  Only hash the password if it has been modified (or is new)
+if (!this.isModified('password')) return next(); 
+try {
       // Generate a salt
-    //  const salt = await bcrypt.genSalt(10);
-      // Hash the password using the salt
-     // this.password = await bcrypt.hash(this.password, 12);
+      const salt = await bcrypt.genSalt(10);
+    //   Hash the password using the salt
+      this.password = await bcrypt.hash(this.password, 12);
 
-      // Delete confirm password
-      //this.passwordConfirm = undefined
-     // next();
- // } catch (error) {
-  //    next(error);
-  //} 
-//});
+       // Delete confirm password
+      this.passwordConfirm = undefined
+      next();
+  } catch (error) {
+      next(error);
+  } 
+});
 
 userSchema.pre("save", function (next) {
   if (!this.isModified("password") || this.isNew) return next();
