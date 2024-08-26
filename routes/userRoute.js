@@ -20,7 +20,7 @@ const {
   deleteMe,
 } = require("../controllers/userController");
 
-router.use(authController.restrictTo("admin"))
+
 
 router.get("/", getAllUsers);
 router.get("/:id", getUser);
@@ -30,6 +30,8 @@ router.post("/login", login);
 router.use(authController.protect);
 router.post("/forgotPassword", forgotPassword);
 router.patch("/resetPassword/:token", resetPassword);
+
+router.use(authController.restrictTo("admin"));
 
 router.patch("/updateMyPassword",  updatePassword);
 router.patch("/updateMe",  updateMe);
