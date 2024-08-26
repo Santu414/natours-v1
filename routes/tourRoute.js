@@ -1,6 +1,7 @@
 const express = require("express");
 const authController=require("./../controllers/authController")
 const reviewRoute = require( "./../routes/reviewRoute")
+const tourController =require("./../controllers/toursController")
 
 
 
@@ -33,7 +34,18 @@ router.get(
   authController.restrictTo("admin", "lead-guide","guide"),
   getMonthlyPlan
 );
-router.get("/:id", getTour);
+
+
+
+// '/tours-within/:distance/center/:latlng/unit/:unit'
+// /tours-within?distance=233&center=-40,45&unit=mi
+router.get(
+  "/tours-within/:distance/center/:latlng/unit/:unit",
+  tourController.getToursWithin
+);
+
+
+router.get("/:id", getTour); 
 router.post(
   "/",
   authController.protect,
